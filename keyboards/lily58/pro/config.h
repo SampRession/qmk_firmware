@@ -1,10 +1,12 @@
 #pragma once
 
 
-#define MASTER_LEFT
+#define MASTER_RIGHT
 
 // OLED
-#define OLED_FONT_H "lib/glcdfont_lily.c"
+
+// Caps Word
+#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 
 // Tri layers
 #define TRI_LAYER_LOWER_LAYER 1
