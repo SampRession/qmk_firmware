@@ -106,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
     /* ========== ADJUST ==========
      * ,-----------------------------------------.                    ,-----------------------------------------.
-     * |      |GAMING|MAPLE |      |      |BRIDWN|                    |BRIUP |      | MPLY | MPRV | MNXT |VOLUP |
+     * |      |GAMING|      |      |      |BRIDWN|                    |BRIUP |      | MPLY | MPRV | MNXT |VOLUP |
      * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
      * |SLEEP |      |      |      |      |DT_UP |                    |DT_DWN|      |      |      |      |VOLDWN|
      * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
@@ -119,7 +119,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                   `----------------------------'           '------''--------------------'
      */
   [_ADJUST] = LAYOUT(
-  _______, TGAMING, TMAPLE,  _______, _______, KC_BRID,                   KC_BRIU, _______, KC_MPLY, KC_MPRV, KC_MNXT, KC_VOLU,
+  _______, TGAMING, TBLENDR, _______, _______, KC_BRID,                   KC_BRIU, _______, KC_MPLY, KC_MPRV, KC_MNXT, KC_VOLU,
   KC_SLEP, _______, _______, _______, _______,   DT_UP,                   DT_DOWN, _______, _______, _______, _______, KC_VOLD,
   HARDER,  _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
   _______, _______, _______, KC_CALC, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_END,
@@ -135,7 +135,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
      * |      |      |      |      |      |      |-------.    ,-------|      |      |      |      |      |      |
      * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
-     * |      |      |      |      |      |      |-------|    |-------|      |      |      |      |      |      |
+     * |      |      |      |      |      | BOOT |-------|    |-------|      |      |      |      |      |      |
      * `-----------------------------------------/       /     \      \-----------------------------------------'
      *                   |      |      |      | /       /       \      \  |      |      |      |
      *                   |      |      |      |/       /         \      \ |      |      |      |
@@ -145,7 +145,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
      _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, KC_PWR,  _______,
      _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+     _______, _______, _______, _______, _______, QK_BOOT, _______, _______, _______, _______, _______, _______, _______, _______,
                                 _______, _______, _______, _______, _______, _______, _______, _______
      ),
 
@@ -169,7 +169,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
   KC_LCTL, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                             _______, _______, LGAMING, _______, _______,  _______, _______, _______
+                             _______, _______, LBLENDR, _______, _______,  _______, _______, _______
   ),
 
     /* ========== LOWER BLENDER ==========
@@ -358,6 +358,9 @@ void render_default_layer_state(void) {
         case _LGAMING:
             oled_write_P(PSTR("LGAMG"), false);
             break;
+        case _LSGAMNG:
+            oled_write_P(PSTR("LSGAM"), false);
+            break;
         case _TEST:
             oled_write_P(PSTR("TEST "), false);
             break;
@@ -369,9 +372,10 @@ void render_default_layer_state(void) {
 // When you add source files to SRC in rules.mk, you can use functions.
 const char *read_layer_state(void);
 const char *read_logo(void);
-void set_keylog(uint16_t keycode, keyrecord_t *record);
-const char *read_keylog(void);
-const char *read_keylogs(void);
+// void set_keylog(uint16_t keycode, keyrecord_t *record);
+// const char *read_keylog(void);
+// void set_keylog(uint16_t keycode);
+// const char *read_keylogs(void);
 
 // const char *read_mode_icon(bool swap);
 // const char *read_host_led_state(void);
@@ -386,8 +390,10 @@ bool oled_task_user(void) {
         oled_write_P(PSTR("-----"), false);
         // Keylogger
         // render_keylogger_status(); // Don't know where this line comes from
-        oled_write_ln(read_keylog(), false);
-        oled_write_ln(read_keylogs(), false);
+        // oled_write_ln(read_keylog(), false);
+        // oled_write_ln(read_keylogs(), false);
+        // oled_write_P(PSTR("-----"), false);
+        // oled_write_ln(read_timelog(), false);
     //oled_write_ln(read_mode_icon(keymap_config.swap_lalt_lgui), false);
     } else {
         oled_write(read_logo(), false);
@@ -397,22 +403,34 @@ bool oled_task_user(void) {
 
 #endif // OLED_ENABLE
 
+// --------  KEYLOG  --------
+// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+// #ifdef OLED_ENABLE
+//   if (record->event.pressed) {
+//     set_keylog(keycode, record);
+//     // set_timelog();
+//   }
+// #endif
+//   return true;
+// }
+
+
 // -------- TAP-HOLD --------
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case DT_UP:
-            if (record->event.pressed) {
-                g_tapping_term += 50;
-            }
-            break;
-        case DT_DOWN:
-            if (record->event.pressed) {
-                g_tapping_term -= 50;
-            }
-            break;
-    }
-    return true;
-}
+// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+//     switch (keycode) {
+//         case DT_UP:
+//             if (record->event.pressed) {
+//                 g_tapping_term += 50;
+//             }
+//             break;
+//         case DT_DOWN:
+//             if (record->event.pressed) {
+//                 g_tapping_term -= 50;
+//             }
+//             break;
+//     }
+//     return true;
+// }
 
 // -------- LEADER --------
 
